@@ -12,7 +12,7 @@ services:
       - 7359:7359/udp
       - 1900:1900/udp
     volumes:
-      - $CONFIGDIR/jellyfin/config:/config
+      - $MEDIADIR/jellyfin/config:/config
       - $DATADIR/movies:/movies
       - $DATADIR/shows:/shows
     environment:
@@ -30,7 +30,7 @@ services:
       - 6881:6881
       - 6881:6881/udp
     volumes:
-      - $CONFIGDIR/qbittorrent/config:/config
+      - $MEDIADIR/qbittorrent/config:/config
       - $DATADIR/downloads:/downloads
     environment:
       - PUID=$PUID
@@ -47,7 +47,7 @@ services:
     ports:
       - 7878:7878
     volumes:
-      - $CONFIGDIR/radarr/config:/config
+      - $MEDIADIR/radarr/config:/config
       - $DATADIR/downloads:/downloads
       - $DATADIR/movies:/movies
     environment:
@@ -63,7 +63,7 @@ services:
     ports:
       - 8989:8989
     volumes:
-      - $CONFIGDIR/sonarr/config:/config
+      - $MEDIADIR/sonarr/config:/config
       - $DATADIR/downloads:/downloads
       - $DATADIR/shows:/shows
     environment:
@@ -77,7 +77,7 @@ services:
     ports:
       - 6767:6767
     volumes:
-      - $CONFIGDIR/bazarr/config:/config
+      - $MEDIADIR/bazarr/config:/config
       - $DATADIR/movies:/movies
       - $DATADIR/shows:/shows
     environment:
@@ -91,7 +91,7 @@ services:
     ports:
       - 8191:8191
     volumes:
-      - $CONFIGDIR/flaresolverr/config:/config
+      - $MEDIADIR/flaresolverr/config:/config
     environment:
       - PUID=$PUID
       - PGID=$PGID
@@ -106,7 +106,7 @@ services:
     ports:
       - 9696:9696
     volumes:
-      - $CONFIGDIR/prowlarr/config:/config
+      - $MEDIADIR/prowlarr/config:/config
     environment:
       - PUID=$PUID
       - PGID=$PGID
@@ -119,8 +119,8 @@ services:
   #   ports:
   #     - 9117:9117
   #   volumes:
-  #     - /home/gustavo/mediaserver/jackett/config:/config
-  #     - /home/gustavo/mediaserver/jackett/downloads:/downloads
+  #     - $MEDIADIR/jackett/config:/config
+  #     - $MEDIADIR/jackett/downloads:/downloads
   #   environment:
   #     - TZ=America/Sao_Paulo
   #     - PUID=1000
