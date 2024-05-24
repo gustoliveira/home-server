@@ -99,7 +99,6 @@ services:
 
   prowlarr:
     image: ghcr.io/hotio/prowlarr:latest
-    container_name: prowlarr
     restart: unless-stopped
     depends_on:
       - flaresolverr
