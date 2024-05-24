@@ -1,0 +1,16 @@
+version: '3'
+
+name: 'tools'
+
+services:
+  homarr:
+    image: ghcr.io/ajnart/homarr:latest
+    restart: unless-stopped
+    ports:
+      - 7575:7575
+    volumes:
+      - $TOOLSDIR/homarr/configs:/app/data/configs
+      - $TOOLSDIR/homarr/icons:/app/public/icons
+      - $TOOLSDIR/homarr/data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+
