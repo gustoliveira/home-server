@@ -111,18 +111,3 @@ services:
       - PGID=$PGID
       - TZ=$TZ
 
-  # jackett:
-  #   image: ghcr.io/linuxserver/jackett:latest
-  #   container_name: jackett
-  #   restart: unless-stopped
-  #   ports:
-  #     - 9117:9117
-  #   volumes:
-  #     - $MEDIADIR/jackett/config:/config
-  #     - $MEDIADIR/jackett/downloads:/downloads
-  #   environment:
-  #     - TZ=America/Sao_Paulo
-  #     - PUID=1000
-  #     - PGID=1000
-  #     - AUTO_UPDATE=true
-
