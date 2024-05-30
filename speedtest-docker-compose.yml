@@ -1,0 +1,14 @@
+version: '3'
+
+name: 'infra'
+
+services:
+  speedtest-monitor:
+    image: ghcr.io/gustoliveira/speedtest-monitoring:latest
+    restart: unless-stopped
+    environment:
+      - TIMEZONE=$TZ
+      - TEST_PERIOD_MIN=30
+    volumes:
+      - $INFRADIR/speedtest-monitor/database:/app/database
+
