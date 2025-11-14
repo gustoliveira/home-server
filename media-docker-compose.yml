@@ -1,5 +1,3 @@
-version: '3'
-
 name: 'media'
 
 services:
@@ -19,6 +17,7 @@ services:
       - PUID=$PUID
       - PGID=$PGID
       - TZ=$TZ
+      - JELLYFIN_PublishedServerUrl=http://192.168.0.37
     devices:
       - /dev/dri:/dev/dri
 
