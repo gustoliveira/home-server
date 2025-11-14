@@ -1,58 +1,79 @@
-version: '3'
-
 name: 'infra'
 
 networks:
-  pihole:
-    ipam:
-      config:
-        - subnet: 172.20.0.0/24
+  # pihole:
+  #   ipam:
+  #     config:
+  #       - subnet: 172.20.0.0/24
+
+  media_network:
+    external: true
+    name: media_default
 
 services:
-  cloudflare-tunnel:
-    image: cloudflare/cloudflared:latest
+  nginx:
+    image: nginx:1.29.3-alpine3.22
     restart: unless-stopped
-    command: tunnel --no-autoupdate run --token $TUNNEL_TOKEN
-
-  watchtower:
-    image: containrrr/watchtower:latest
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-
-  cloudflare-dns:
-    image: visibilityspots/cloudflared:latest
-    restart: unless-stopped
-    networks:
-      pihole:
-        ipv4_address: 172.20.0.6
-    environment:
-      - UPSTREAM1=https://dns.google/dns-query
-      - PORT=5053
-      - METRICS=127.0.0.1:8088
-
-  pihole:
-    image: pihole/pihole:latest
-    restart: unless-stopped
-    depends_on:
-      - cloudflare-dns
-    networks:
-      pihole:
-        ipv4_address: 172.20.0.7
     ports:
-      - 53:53/tcp
-      - 53:53/udp
-      - 80:80/tcp
-    environment:
-      - TZ=$TZ
-      - DNSMASQ_LISTENING=all
-      - WEBPASSWORD=$WEBPASSWORD
-      - VIRTUAL_HOST=pi.hole
-      - FTLCONF_LOCAL_IPV4=192.168.1.84
-      - PIHOLE_DNS_=172.20.0.6#5053;8.8.8.8;8.8.4.4
+      - "80:80"
     volumes:
-      - $INFRADIR/pihole/dnsmasq.d:/etc/dnsmasq.d
-      - $INFRADIR/pihole/pihole:/etc/pihole
-    cap_add:
-      - NET_RAW
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./certbot/conf:/etc/letsencrypt:ro
+      - ./certbot/www:/var/www/certbot:ro
+    networks:
+      - media_network
 
+  # cloudflare-tunnel:
+  #   image: cloudflare/cloudflared:latest
+  #   restart: unless-stopped
+  #   command: tunnel --no-autoupdate run --token {{TOKEN}}
+
+  # watchtower:
+  #   image: containrrr/watchtower:latest
+  #   restart: unless-stopped
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+
+  # cloudflare-dns:
+  #   image: visibilityspots/cloudflared:latest
+  #   restart: unless-stopped
+  #   networks:
+  #     pihole:
+  #       ipv4_address: 172.20.0.6
+  #   environment:
+  #     - UPSTREAM1=https://dns.google/dns-query
+  #     - PORT=5053
+  #     - METRICS=127.0.0.1:8088
+
+  # pihole:
+  #   image: pihole/pihole:latest
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - cloudflare-dns
+  #   networks:
+  #     pihole:
+  #       ipv4_address: 172.20.0.7
+  #   ports:
+  #     - 53:53/tcp
+  #     - 53:53/udp
+  #     - 80:80/tcp
+  #   environment:
+  #     - TZ=$TZ
+  #     - DNSMASQ_LISTENING=all
+  #     - WEBPASSWORD=$WEBPASSWORD
+  #     - VIRTUAL_HOST=pi.hole
+  #     - FTLCONF_LOCAL_IPV4=192.168.1.84
+  #     - PIHOLE_DNS_=172.20.0.6#5053;8.8.8.8;8.8.4.4
+  #   volumes:
+  #     - $INFRADIR/pihole/dnsmasq.d:/etc/dnsmasq.d
+  #     - $INFRADIR/pihole/pihole:/etc/pihole
+  #   cap_add:
+  #     - NET_RAW
+
+  # speedtest-monitoring:
+  #   image: ghcr.io/gustoliveira/speedtest-monitoring:latest
+  #   restart: unless-stopped
+  #   environment:
+  #     - TIMEZONE=America/Sao_Paulo
+  #     - TEST_PERIOD_MIN=30
